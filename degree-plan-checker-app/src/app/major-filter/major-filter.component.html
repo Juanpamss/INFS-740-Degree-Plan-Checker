@@ -1,0 +1,12 @@
+<div class="card border-secondary mb-3">
+  <div class="card-body">
+    <h2>Program</h2>
+    <select [(ngModel)]="majorSelection" name="major" id="major" class="btn btn-secondary dropdown-toggle" (change)="getCoursesForMajor()">
+      <option value="Computer Science">Computer Science</option>
+      <option value="Information Systems">Information Systems</option>
+      <option value="Information Security and Assurance">Information Security and Assurance</option>
+      <option value="Software Engineering">Software Engineering</option>
+    </select><br><br>
+    <div class="container" style="background-color: aliceblue"></div>
+  </div>
+</div>

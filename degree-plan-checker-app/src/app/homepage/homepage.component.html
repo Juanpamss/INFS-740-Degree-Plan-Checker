@@ -1,3 +1,31 @@
-<div class="container">
+<div class="container-fluid">
   <app-navbar></app-navbar>
+  <br>
+  <div class="row" style="margin-bottom: 20px">
+    <div class="d-flex justify-content-center">
+      <app-major-filter></app-major-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div id="courseSelection" style="display: none">
+      <div class="jumbotron" style="background-color: #006940; height: 100px">
+        <div class="container-fluid" style="text-align: center; margin-top: -60px">
+          <h1 class="display-4" style="color: #FFCC33; font-weight: bold">Course List</h1>
+          <h4 style="color: white">If any, select your approved courses</h4>
+        </div>
+      </div>
+      <app-course-selector></app-course-selector>
+    </div>
+  </div>
+  <div class="row">
+    <div id="studyPlan" style="display: none">
+      <div class="jumbotron" style="background-color: #006940; height: 100px">
+        <div class="container-fluid" style="text-align: center; margin-top: -60px">
+          <h1 class="display-4" style="color: #FFCC33; font-weight: bold">Study Plan</h1>
+          <h4 style="color: white">According to the study preference</h4>
+        </div>
+      </div>
+      <app-schedule-content></app-schedule-content>
+    </div>
+  </div>
 </div>
