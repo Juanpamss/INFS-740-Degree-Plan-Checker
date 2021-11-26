@@ -25,6 +25,7 @@ export class CourseSelectorComponent implements OnInit {
   semesterData : SemesterData[] = []
 
   readonly totalRequiredCredits = 30
+  coursesPerSemester : number = 3
 
   constructor(
     private _store: Store<{courseList: {courseList: []}}>,
@@ -93,7 +94,7 @@ export class CourseSelectorComponent implements OnInit {
       // Make a copy of the array to make it mutable. By default it is inmutable
       this.prereqList = [...this.prereqList]
       while(totalTakenCredits < this.totalRequiredCredits){
-        while(coursesToTake.length < 3){
+        while(coursesToTake.length < this.coursesPerSemester){
           if(coreCourses.length > 0){
             let minCoreCourse = coreCourses.reduce((prev, curr) => {
               return prev.difficulty < curr.difficulty ? prev : curr;
@@ -115,7 +116,7 @@ export class CourseSelectorComponent implements OnInit {
             coreCourses.splice(coreCourses.indexOf(minCoreCourse),1)
             totalTakenCredits = this.updateTotalCreditsCount(totalTakenCredits, minCoreCourse);
             if(totalTakenCredits == this.totalRequiredCredits) break;
-            if(coursesToTake.length == 3) break;
+            if(coursesToTake.length == this.coursesPerSemester) break;
           }
 
           if(relatedCourses.length > 0){
@@ -143,7 +144,7 @@ export class CourseSelectorComponent implements OnInit {
             relatedCourses.splice(relatedCourses.indexOf(minRelatedCourse),1)
             totalTakenCredits = this.updateTotalCreditsCount(totalTakenCredits, minRelatedCourse);
             if(totalTakenCredits == this.totalRequiredCredits) break;
-            if(coursesToTake.length == 3) break;
+            if(coursesToTake.length == this.coursesPerSemester) break;
           }
 
           if(electiveCourses.length > 0){
@@ -167,7 +168,7 @@ export class CourseSelectorComponent implements OnInit {
             electiveCourses.splice(electiveCourses.indexOf(minElectiveCourse),1)
             totalTakenCredits = this.updateTotalCreditsCount(totalTakenCredits, minElectiveCourse);
             if(totalTakenCredits == this.totalRequiredCredits) break;
-            if(coursesToTake.length == 3) break;
+            if(coursesToTake.length == this.coursesPerSemester) break;
           }
         }
 

@@ -14,7 +14,10 @@ import { AccordionComponent } from './accordion/accordion.component';
 import { MyFilterPipe } from './pipes/MyFilterPipe';
 import { ScheduleContentComponent } from './schedule-content/schedule-content.component';
 import { SemesterCardComponent } from './semester-card/semester-card.component';
-import { EstimatedGradeComponent } from './estimated-grade/estimated-grade.component'
+import { EstimatedGradeComponent } from './estimated-grade/estimated-grade.component';
+import { RecordsComponent } from './records/records.component';
+import { RecordsTableComponent } from './records-table/records-table.component';
+import { RecordsDataReadonlyComponent } from './records-data-readonly/records-data-readonly.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { EstimatedGradeComponent } from './estimated-grade/estimated-grade.compo
     MyFilterPipe,
     ScheduleContentComponent,
     SemesterCardComponent,
-    EstimatedGradeComponent
+    EstimatedGradeComponent,
+    RecordsComponent,
+    RecordsTableComponent,
+    RecordsDataReadonlyComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +43,9 @@ import { EstimatedGradeComponent } from './estimated-grade/estimated-grade.compo
       courseList: schedulerReducer,
       selectedCourses: schedulerReducer,
       prereqList: schedulerReducer,
-      semesterData: schedulerReducer
+      semesterData: schedulerReducer,
+      schedules: schedulerReducer,
+      scheduleData: schedulerReducer
     }),
     NgbModule
   ],

@@ -1,6 +1,13 @@
 import {createReducer, on} from "@ngrx/store";
 import {initialState} from "./scheduler.state";
-import {getCoursesForMajor, getPrereqForCourses, generateSemesterData, updateSelectedCoursesList} from "./scheduler.actions";
+import {
+  getCoursesForMajor,
+  getPrereqForCourses,
+  generateSemesterData,
+  updateSelectedCoursesList,
+  getSchedules, getScheduleData
+} from "./scheduler.actions";
+import {getScheduleDataList} from "./scheduler.selector";
 
 const _schedulerReducer = createReducer(
   initialState,
@@ -20,6 +27,18 @@ const _schedulerReducer = createReducer(
     return {
       ...state,
       semesterData: semesterData
+    }
+  }),
+  on(getSchedules, (state, { schedules }) => {
+    return {
+      ...state,
+      schedules: schedules
+    }
+  }),
+  on(getScheduleData, (state, { scheduleData }) => {
+    return {
+      ...state,
+      scheduleData: scheduleData
     }
   }),
   on(updateSelectedCoursesList, (state, { selectedCourse }) => {

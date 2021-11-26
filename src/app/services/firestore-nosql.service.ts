@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, query, orderBy, where } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, query, orderBy, where, addDoc } from 'firebase/firestore/lite';
 import {props, Store} from "@ngrx/store";
-import {getCoursesForMajor, getPrereqForCourses} from "../state/scheduler.actions";
+import {getCoursesForMajor, getPrereqForCourses, getScheduleData, getSchedules} from "../state/scheduler.actions";
+import {SemesterData} from "../models/semester-data";
+import firebase from "firebase/compat";
+import Timestamp = firebase.firestore.Timestamp;
+import {Schedule} from "../models/schedule";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -21,8 +25,6 @@ const app = initializeApp(firebaseConfig);
   providedIn: 'root'
 })
 export class FirestoreNOSQLService {
-
-  courseList : any[]
 
   db = getFirestore(app);
 
@@ -47,4 +49,50 @@ export class FirestoreNOSQLService {
     const prereqList = await prereqSnapshot.docs.map(doc => doc.data());
     this._store.dispatch(getPrereqForCourses({prereqList: prereqList}));
   }
+
+  async insertScheduleData(data: SemesterData[]) {
+    const scheduleColRef = collection(this.db, 'schedules');
+    const scheduleDataColRef = collection(this.db, 'scheduleData');
+
+    let scheduleToInsert = {
+      userId: 1,
+      semesterQuantity: data.length,
+      createdOn: Date.now()
+    }
+
+    //To convert timestamp to date
+    //let date = new Date(scheduleToInsert.createdOn).toLocaleDateString("en-us")
+
+    addDoc(scheduleColRef, scheduleToInsert).then(function(docRef) {
+      data.forEach( item => {
+        let dataToInsert = {
+          scheduleId: docRef.id,
+          term: item.term,
+          year: item.year,
+          courses: item.courses
+        }
+        addDoc(scheduleDataColRef, dataToInsert)
+      })
+    })
+  }
+
+  async getSchedules(){
+    const scheduleColRef = collection(this.db, 'schedules');
+    //const q = query(prereqCol, where("cno", "in", cnos));
+    const q = query(scheduleColRef);
+    const scheduleSnapshot = await getDocs(q);
+    const schedulesList = scheduleSnapshot.docs.map(
+      doc => new Schedule(doc.id, doc.data().userId, doc.data().semesterQuantity, doc.data().createdOn)
+    );
+    this._store.dispatch(getSchedules({schedules: schedulesList}));
+  }
+
+  async getScheduleData(scheduleId) {
+    const scheduleDataColRef = collection(this.db, 'scheduleData');
+    const q = query(scheduleDataColRef, where("scheduleId", "==", scheduleId));
+    const scheduleDataSnapshot = await getDocs(q);
+    const scheduleDataList = scheduleDataSnapshot.docs.map(doc => doc.data());
+    this._store.dispatch(getScheduleData({scheduleData: scheduleDataList}));
+  }
+
 }
