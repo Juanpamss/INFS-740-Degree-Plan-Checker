@@ -18,10 +18,10 @@ export class RecordsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._firestoreService.getPrerequisites().finally()
     this._firestoreService.getSchedules().finally();
     this._store.select(getSchedulesList).subscribe(schedules => {
       this.schedules = schedules
     })
   }
-
 }

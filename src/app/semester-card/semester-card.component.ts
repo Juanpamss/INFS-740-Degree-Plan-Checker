@@ -9,8 +9,11 @@ import {SemesterData} from "../models/semester-data";
 export class SemesterCardComponent implements OnInit {
 
   @Input() semesterData : SemesterData = null
+  @Input() prereqList : any[] = []
 
   totalCredits : number
+
+  tooltip
 
   constructor() { }
 
@@ -18,6 +21,14 @@ export class SemesterCardComponent implements OnInit {
     this.totalCredits = this.semesterData.courses.reduce( (total, item) => {
       return total + item.credits;
     }, 0);
+    console.log(this.prereqList)
   }
 
+  isPrereq(course){
+    return this.prereqList.some( e => e.pno == course.cno && e.pcode == course.dcode)
+  }
+
+  getPrereqInfo(course){
+    return this.prereqList.find( e => e.pno == course.cno && e.pcode == course.dcode)
+  }
 }

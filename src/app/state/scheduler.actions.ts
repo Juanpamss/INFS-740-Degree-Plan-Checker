@@ -26,3 +26,7 @@ export const getSchedules = createAction('getSchedulesList',
 export const getScheduleData = createAction('getScheduleDataList',
   props<{ scheduleData: any[] }>()
 );
+
+export const updateTotalTakenCreditsCount = createAction('getTotalTakenCreditsList',
+  props<{ totalTakenCredits: number }>()
+);

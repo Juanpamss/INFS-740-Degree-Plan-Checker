@@ -7,15 +7,35 @@
       <div class="card border-dark" style="margin-bottom: 15px;">
         <h5 class="card-header border-secondary mb-3">{{item.dcode + "-" + item.cno}}
           <ng-container *ngIf="item.type == 'Core'">
-            <span class="glyphicon glyphicon-star" aria-hidden="true">
-            <svg style="margin-bottom: 5px" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-            </svg>
-          </span>
+            <div class="toolTipCustom">
+              <svg style="margin-bottom: 6px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+              </svg>
+              <div class="tooltipText">
+                <text>Core Course</text>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isPrereq(item)">
+            <div class="toolTipCustom">
+              <svg style="margin-bottom: 5px; color: #b44404" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <div class="tooltipText">
+                {{"Prerequisite for " + getPrereqInfo(item).dcode + "-" + getPrereqInfo(item).cno}}
+              </div>
+            </div>
           </ng-container>
         </h5>
-        <div class="card-body">
-          <h8 class="card-title" style="text-align: justify">{{item.name}}</h8>
+        <div class="card-body" style="margin-top: -20px; margin-bottom: -20px">
+          <div class="d-flex align-items-center">
+            <div class="row">
+              <h8 class="card-title" style="text-align: left">{{item.name}}</h8>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <label style="font-weight: bold; color: #05649e">Est. Grade: {{item.avgGrade}}</label>
+          </div>
         </div>
       </div>
     </ng-container>
@@ -24,3 +44,9 @@
     <span class="tooltiptext">Tooltip text</span>
   </div>
 </div>
+
+<script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>

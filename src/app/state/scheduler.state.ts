@@ -5,6 +5,7 @@ import {Schedule} from "../models/schedule";
 export interface initialState{
   courseList : [],
   prereqList: [],
+  totalTakenCredits: number,
   selectedCourses : Course[],
   semesterData : SemesterData[],
   schedules: Schedule[],
@@ -14,6 +15,7 @@ export interface initialState{
 export const initialState = {
   courseList : [],
   prereqList: [],
+  totalTakenCredits: 0,
   selectedCourses : [],
   semesterData : [],
   schedules: [],

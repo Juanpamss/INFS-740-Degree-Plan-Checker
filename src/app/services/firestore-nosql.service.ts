@@ -64,12 +64,13 @@ export class FirestoreNOSQLService {
     //let date = new Date(scheduleToInsert.createdOn).toLocaleDateString("en-us")
 
     addDoc(scheduleColRef, scheduleToInsert).then(function(docRef) {
-      data.forEach( item => {
+      data.forEach( (item, index) => {
         let dataToInsert = {
           scheduleId: docRef.id,
           term: item.term,
           year: item.year,
-          courses: item.courses
+          order: index+1,
+          courses: item.courses,
         }
         addDoc(scheduleDataColRef, dataToInsert)
       })

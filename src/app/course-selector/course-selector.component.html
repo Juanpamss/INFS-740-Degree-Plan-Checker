@@ -31,7 +31,7 @@
           <option value=2>2</option>
           <option value=3>3</option>
         </select><br><br>
-        <button style="width: 100%" type="button" class="btn btn-info" [disabled]="selectedCourses.length <= 0" (click)="generateSchedule()">Generate Schedule</button>
+        <button style="width: 100%" type="button" class="btn btn-info" [disabled]="this.totalTakenCredits == 30" (click)="generateSchedule()">Generate Schedule</button>
       </div>
     </div>
   </div>

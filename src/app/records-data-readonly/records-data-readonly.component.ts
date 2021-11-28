@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SemesterData} from "../models/semester-data";
-import {getScheduleDataList, getSemesterDataList} from "../state/scheduler.selector";
+import {getPrereqList, getScheduleDataList, getSemesterDataList} from "../state/scheduler.selector";
 import {Store} from "@ngrx/store";
 
 @Component({
@@ -11,6 +11,8 @@ import {Store} from "@ngrx/store";
 export class RecordsDataReadonlyComponent implements OnInit {
 
   semesterData: SemesterData[] = []
+  prereqList: any[]
+  avgGPA: number = 0
 
   constructor(
     private _store: Store<{scheduleData: {scheduleData: []}}>,
@@ -27,6 +29,22 @@ export class RecordsDataReadonlyComponent implements OnInit {
         }
         return 0;
       })
+
+      //Calculate expected GP
+      let courseCounter = 0
+      let auxAvg = 0
+      this.semesterData.forEach( e => {
+        auxAvg +=  e.courses.reduce( (total, item) => {
+          courseCounter++
+          return total + item.avgGPA;
+        }, 0);
+
+      })
+      this.avgGPA = Number((auxAvg/courseCounter).toFixed(2))
+    })
+
+    this._store.select(getPrereqList).subscribe(prereqList => {
+      this.prereqList = prereqList
     })
   }
 

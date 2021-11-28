@@ -5,7 +5,7 @@ import {
   getPrereqForCourses,
   generateSemesterData,
   updateSelectedCoursesList,
-  getSchedules, getScheduleData
+  getSchedules, getScheduleData, updateTotalTakenCreditsCount
 } from "./scheduler.actions";
 import {getScheduleDataList} from "./scheduler.selector";
 
@@ -39,6 +39,12 @@ const _schedulerReducer = createReducer(
     return {
       ...state,
       scheduleData: scheduleData
+    }
+  }),
+  on(updateTotalTakenCreditsCount, (state, { totalTakenCredits }) => {
+    return {
+      ...state,
+      totalTakenCredits: totalTakenCredits
     }
   }),
   on(updateSelectedCoursesList, (state, { selectedCourse }) => {

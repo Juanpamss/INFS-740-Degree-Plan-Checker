@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {Course} from "../models/course";
 import {Store} from "@ngrx/store";
-import {getSelectedCourseList, getSemesterDataList} from "../state/scheduler.selector";
+import {getPrereqList, getSelectedCourseList, getSemesterDataList} from "../state/scheduler.selector";
 import {SemesterData} from "../models/semester-data";
 import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
 
@@ -21,10 +21,27 @@ export class ScheduleContentComponent implements OnInit {
 
   selectedCourses : Course[] = []
   semesterData : SemesterData[] = []
+  prereqList: any[] = []
+  avgGPA : number = 0
 
   ngOnInit(): void {
     this._store.select(getSemesterDataList).subscribe(semesterData => {
       this.semesterData = semesterData
+
+      //Calculate expected GP
+      let courseCounter = 0
+      let auxAvg = 0
+      this.semesterData.forEach( e => {
+        auxAvg +=  e.courses.reduce( (total, item) => {
+          courseCounter++
+          return total + item.avgGPA;
+        }, 0);
+
+      })
+      this.avgGPA = Number((auxAvg/courseCounter).toFixed(2))
+    })
+    this._store.select(getPrereqList).subscribe(prereqList => {
+      this.prereqList = prereqList
     })
   }
 

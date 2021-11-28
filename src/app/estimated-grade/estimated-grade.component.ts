@@ -9,8 +9,8 @@ export class EstimatedGradeComponent implements OnInit {
 
   constructor() { }
 
-  @Input() grade : string
-  @Input() gpa : number
+  @Input() avgGrade : string
+  @Input() avgGpa : number
 
   ngOnInit(): void {
   }
