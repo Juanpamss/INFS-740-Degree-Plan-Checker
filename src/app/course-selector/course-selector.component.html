@@ -31,8 +31,26 @@
           <option value=2>2</option>
           <option value=3>3</option>
         </select><br><br>
-        <button style="width: 100%" type="button" class="btn btn-info" [disabled]="this.totalTakenCredits == 30" (click)="generateSchedule()">Generate Schedule</button>
+        <button style="width: 100%" type="button" class="btn btn-info" [disabled]="this.totalTakenCredits == 30" (click)="verifySelection(content)">Generate Schedule</button>
       </div>
     </div>
   </div>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Please verify your course selection</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <label>The following prerequisite for the class {{requiredPrereq.prereq.dcode + "-" + requiredPrereq.prereq.cno}} is missing: </label>
+      <br>
+      <ul>
+        <li>{{requiredPrereq.prereq.pcode + "-" + requiredPrereq.prereq.pno}}</li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Dismiss</button>
+    </div>
+  </ng-template>
 </div>

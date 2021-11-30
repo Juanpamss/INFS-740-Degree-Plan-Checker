@@ -13,6 +13,7 @@ import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
 import {SemesterData} from "../models/semester-data";
 import {Calendar} from "../models/calendar";
 import {generateSemesterData} from "../state/scheduler.actions";
+import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-course-selector',
@@ -30,10 +31,13 @@ export class CourseSelectorComponent implements OnInit {
   readonly totalRequiredCredits = 30
   coursesPerSemester : number = 3
   selectedProgram: string = ""
+  closeResult = '';
+  requiredPrereq = null
 
   constructor(
     private _store: Store<{courseList: {courseList: []}}>,
-    private _firestoreService : FirestoreNOSQLService
+    private _firestoreService : FirestoreNOSQLService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -116,12 +120,15 @@ export class CourseSelectorComponent implements OnInit {
           // Find prereq using pno and pcode
           let elementToDelete = null;
           this.prereqList.every( element => {
-            if(element.cno == minRelatedCourse.cno && element.dcode == minRelatedCourse.dcode){
+            if(element.cno == minRelatedCourse.cno && element.dcode == minRelatedCourse.dcode
+              && this.selectedCourses.find( item =>
+                item.cno == element.pno && item.dcode == element.pcode
+              ) == undefined
+            ){
               minRelatedCourse = this.courseList.find( item =>
                 item.cno == element.pno && item.dcode == element.pcode
               )
               elementToDelete = element
-              console.log("prereq rel",element)
               return false;
             }
             return true;
@@ -145,12 +152,15 @@ export class CourseSelectorComponent implements OnInit {
           // Find prereq using pno and pcode
           let elementToDelete = null;
           this.prereqList.every( element => {
-            if(element.cno == minElectiveCourse.cno && element.dcode == minElectiveCourse.dcode){
+            if(element.cno == minElectiveCourse.cno && element.dcode == minElectiveCourse.dcode
+              && this.selectedCourses.find( item =>
+                item.cno == element.pno && item.dcode == element.pcode
+              ) == undefined
+            ){
               minElectiveCourse = this.courseList.find( item =>
                 item.cno == element.pno && item.dcode == element.pcode
               )
               elementToDelete = element
-              console.log("to delete",this.prereqList.indexOf(elementToDelete))
               return false;
             }
             return true;
@@ -224,6 +234,53 @@ export class CourseSelectorComponent implements OnInit {
   showStudyPlanSection(){
     let x = document.getElementById("studyPlan");
     x.style.display = "block";
+  }
+
+  verifySelection(content) {
+    this.requiredPrereq = this.isSelectionCorrect()
+    console.log("result",this.requiredPrereq)
+    if(this.requiredPrereq.prereqExists == undefined && this.requiredPrereq.prereq != undefined){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }else{
+      this.generateSchedule()
+    }
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  isSelectionCorrect(){
+    let prereqExists = undefined
+    let prereq
+    this.prereqList.every( element => {
+      this.selectedCourses.every( e => {
+        if(element.cno == e.cno && element.dcode == e.dcode){
+          prereq = element
+          prereqExists = this.selectedCourses.find( item =>
+            item.cno == element.pno && item.dcode == element.pcode
+          )
+          console.log("prereq",prereq)
+          console.log("selected",prereqExists)
+          if(prereqExists == undefined){
+            return false;
+          }
+        }
+        return true;
+      })
+      return true;
+    })
+    return {prereqExists: prereqExists, prereq: prereq}
   }
 
 }

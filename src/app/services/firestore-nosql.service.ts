@@ -7,6 +7,7 @@ import {SemesterData} from "../models/semester-data";
 import firebase from "firebase/compat";
 import Timestamp = firebase.firestore.Timestamp;
 import {Schedule} from "../models/schedule";
+import {Course} from "../models/course";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -38,6 +39,15 @@ export class FirestoreNOSQLService {
     const q = query(coursesCol, where("program", "==", program));
     const coursesSnapshot = await getDocs(q);
     const coursesList = await coursesSnapshot.docs.map(doc => doc.data());
+    coursesList.sort(function (a:Course,b:Course){
+      if (a.dcode < b.dcode) {
+        return -1;
+      }
+      if (a.dcode > b.dcode) {
+        return 1;
+      }
+      return 0;
+    })
     this._store.dispatch(getCoursesForMajor({courseList: coursesList}));
   }
 
