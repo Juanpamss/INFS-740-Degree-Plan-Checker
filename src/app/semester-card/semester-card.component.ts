@@ -21,7 +21,6 @@ export class SemesterCardComponent implements OnInit {
     this.totalCredits = this.semesterData.courses.reduce( (total, item) => {
       return total + item.credits;
     }, 0);
-    console.log(this.prereqList)
   }
 
   isPrereq(course){

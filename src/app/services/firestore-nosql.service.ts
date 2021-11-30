@@ -33,9 +33,9 @@ export class FirestoreNOSQLService {
   ) { }
 
   // Get a list of courses from database
-  async getCourses() {
+  async getCourses(program) {
     const coursesCol = collection(this.db, 'courses');
-    const q = query(coursesCol, orderBy("dcode", "asc"));
+    const q = query(coursesCol, where("program", "==", program));
     const coursesSnapshot = await getDocs(q);
     const coursesList = await coursesSnapshot.docs.map(doc => doc.data());
     this._store.dispatch(getCoursesForMajor({courseList: coursesList}));
@@ -50,12 +50,13 @@ export class FirestoreNOSQLService {
     this._store.dispatch(getPrereqForCourses({prereqList: prereqList}));
   }
 
-  async insertScheduleData(data: SemesterData[]) {
+  async insertScheduleData(data: SemesterData[], program) {
     const scheduleColRef = collection(this.db, 'schedules');
     const scheduleDataColRef = collection(this.db, 'scheduleData');
 
     let scheduleToInsert = {
       userId: 1,
+      program: program,
       semesterQuantity: data.length,
       createdOn: Date.now()
     }
@@ -83,8 +84,18 @@ export class FirestoreNOSQLService {
     const q = query(scheduleColRef);
     const scheduleSnapshot = await getDocs(q);
     const schedulesList = scheduleSnapshot.docs.map(
-      doc => new Schedule(doc.id, doc.data().userId, doc.data().semesterQuantity, doc.data().createdOn)
+      doc => new Schedule(doc.id, doc.data().userId, doc.data().program, doc.data().semesterQuantity, doc.data().createdOn)
     );
+    //Sort schedules manually by date since FireBase does not allow multiple sorting fields
+    schedulesList.sort( function (a:Schedule,b:Schedule){
+      if (a.createdOn < b.createdOn) {
+        return -1;
+      }
+      if (a.createdOn > b.createdOn) {
+        return 1;
+      }
+      return 0;
+    })
     this._store.dispatch(getSchedules({schedules: schedulesList}));
   }
 

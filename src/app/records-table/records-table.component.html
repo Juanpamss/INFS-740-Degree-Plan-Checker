@@ -1,7 +1,8 @@
 <table class="table table-hover">
   <thead>
   <tr>
-    <th scope="col">#</th>
+    <th scope="col" style="width: 5px">#</th>
+    <th scope="col">Program</th>
     <th scope="col">Semesters</th>
     <th scope="col">Created On</th>
   </tr>
@@ -9,7 +10,8 @@
   <tbody>
   <ng-container *ngFor="let item of schedules; let i = index">
     <tr (click)="getScheduleData(this.schedules[i])">
-      <td>{{i+1}}</td>
+      <td style="width: 5px">{{i+1}}</td>
+      <td>{{item.program}}</td>
       <td>{{item.semesterQuantity}}</td>
       <td>{{convertDate(item.createdOn)}}</td>
     </tr>

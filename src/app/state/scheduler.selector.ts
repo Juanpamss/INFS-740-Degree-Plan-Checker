@@ -8,6 +8,7 @@ const getSemesterDataState = createFeatureSelector<initialState>('semesterData')
 const getSchedulesState = createFeatureSelector<initialState>('schedules')
 const getScheduleDataState = createFeatureSelector<initialState>('scheduleData')
 const getTotalTakenCreditsState = createFeatureSelector<initialState>('totalTakenCredits')
+const getSelectedProgramState = createFeatureSelector<initialState>('selectedProgram')
 
 export const getCourseList = createSelector(getCourseListState, (state) => {
   return state.courseList
@@ -35,4 +36,8 @@ export const getScheduleDataList = createSelector(getScheduleDataState, (state) 
 
 export const getTotalTakenCreditsList = createSelector(getTotalTakenCreditsState, (state) => {
   return state.totalTakenCredits
+})
+
+export const getSelectedProgram = createSelector(getSelectedProgramState, (state) => {
+  return state.selectedProgram
 })

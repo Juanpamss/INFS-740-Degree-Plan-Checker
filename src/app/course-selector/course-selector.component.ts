@@ -5,7 +5,7 @@ import {Store} from "@ngrx/store";
 import {
   getCourseList,
   getPrereqList,
-  getSelectedCourseList,
+  getSelectedCourseList, getSelectedProgram,
   getSemesterDataList,
   getTotalTakenCreditsList
 } from "../state/scheduler.selector";
@@ -23,12 +23,13 @@ export class CourseSelectorComponent implements OnInit {
 
   selectedCourses : Course[] = []
   prereqList: any[] = []
+  prereqListCopy: any[] = []
   courseList : Course[] = []
   semesterData : SemesterData[] = []
   totalTakenCredits: number = 0
   readonly totalRequiredCredits = 30
   coursesPerSemester : number = 3
-
+  selectedProgram: string = ""
 
   constructor(
     private _store: Store<{courseList: {courseList: []}}>,
@@ -45,12 +46,16 @@ export class CourseSelectorComponent implements OnInit {
     })
     this._store.select(getPrereqList).subscribe(prereqList => {
       this.prereqList = prereqList
+      this.prereqListCopy = prereqList
     })
     this._store.select(getSemesterDataList).subscribe(semesterData => {
       this.semesterData = semesterData
     })
     this._store.select(getTotalTakenCreditsList).subscribe(totalTakenCredits => {
       this.totalTakenCredits = totalTakenCredits
+    })
+    this._store.select(getSelectedProgram).subscribe(selectedProgram => {
+      this.selectedProgram = selectedProgram
     })
   }
 
@@ -69,14 +74,13 @@ export class CourseSelectorComponent implements OnInit {
       }
     })
 
-    console.log("core: ", coreCourses)
+    /*console.log("core: ", coreCourses)
     console.log("related: ", relatedCourses)
-    console.log("electives: ", electiveCourses)
+    console.log("electives: ", electiveCourses)*/
 
     this.totalTakenCredits = this.selectedCourses.reduce( (total, item) => {
       return total + item.credits;
     }, 0);
-
 
     let semesterData : SemesterData[] = []
     let coursesToTake : Course[] = []
@@ -89,7 +93,6 @@ export class CourseSelectorComponent implements OnInit {
           let minCoreCourse = coreCourses.reduce((prev, curr) => {
             return prev.difficulty < curr.difficulty ? prev : curr;
           });
-
           // Find prereq using pno and pcode
           this.prereqList.every( element => {
             if(element.cno == minCoreCourse.cno && element.dcode == minCoreCourse.dcode){
@@ -122,14 +125,15 @@ export class CourseSelectorComponent implements OnInit {
                 item.cno == element.pno && item.dcode == element.pcode
               )
               elementToDelete = element
+              console.log("prereq rel",element)
               return false;
             }
             return true;
           })
 
           this.prereqList.splice(this.prereqList.indexOf(elementToDelete),1)
-
           coursesToTake.push(minRelatedCourse)
+
           //Remove class from future considerations
           relatedCourses.splice(relatedCourses.indexOf(minRelatedCourse),1)
           this.totalTakenCredits = this.updateTotalCreditsCount(this.totalTakenCredits, minRelatedCourse);
@@ -143,17 +147,22 @@ export class CourseSelectorComponent implements OnInit {
           });
 
           // Find prereq using pno and pcode
+          let elementToDelete = null;
           this.prereqList.every( element => {
             if(element.cno == minElectiveCourse.cno && element.dcode == minElectiveCourse.dcode){
               minElectiveCourse = this.courseList.find( item =>
                 item.cno == element.pno && item.dcode == element.pcode
               )
+              elementToDelete = element
+              console.log("to delete",this.prereqList.indexOf(elementToDelete))
               return false;
             }
             return true;
           })
 
+          this.prereqList.splice(this.prereqList.indexOf(elementToDelete),1)
           coursesToTake.push(minElectiveCourse)
+
           //Remove class from future considerations
           electiveCourses.splice(electiveCourses.indexOf(minElectiveCourse),1)
           this.totalTakenCredits = this.updateTotalCreditsCount(this.totalTakenCredits, minElectiveCourse);
@@ -208,6 +217,8 @@ export class CourseSelectorComponent implements OnInit {
     }
 
     this.showStudyPlanSection();
+    this.prereqList = this.prereqListCopy
+    this.totalTakenCredits = 0
   }
 
   updateTotalCreditsCount(totalTakenCredits, course){

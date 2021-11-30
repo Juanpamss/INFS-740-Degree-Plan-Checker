@@ -1,5 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
+import {Schedule} from "../models/schedule";
+import {getScheduleDataList} from "../state/scheduler.selector";
+import {Store} from "@ngrx/store";
+import {SemesterData} from "../models/semester-data";
 
 @Component({
   selector: 'app-records-table',
@@ -9,13 +13,13 @@ import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
 export class RecordsTableComponent implements OnInit {
 
   @Input() schedules: any[] = []
+  @Input() program: any = ""
 
   constructor(
-    private _firestoreService : FirestoreNOSQLService,
+    private _firestoreService : FirestoreNOSQLService
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   convertDate(date){
     return new Date(date).toLocaleDateString("en-us")

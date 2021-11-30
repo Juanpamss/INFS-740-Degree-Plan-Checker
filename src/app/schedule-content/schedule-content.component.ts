@@ -1,7 +1,12 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {Course} from "../models/course";
 import {Store} from "@ngrx/store";
-import {getPrereqList, getSelectedCourseList, getSemesterDataList} from "../state/scheduler.selector";
+import {
+  getPrereqList,
+  getSelectedCourseList,
+  getSelectedProgram,
+  getSemesterDataList
+} from "../state/scheduler.selector";
 import {SemesterData} from "../models/semester-data";
 import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
 
@@ -23,6 +28,7 @@ export class ScheduleContentComponent implements OnInit {
   semesterData : SemesterData[] = []
   prereqList: any[] = []
   avgGPA : number = 0
+  selectedProgram: string = ""
 
   ngOnInit(): void {
     this._store.select(getSemesterDataList).subscribe(semesterData => {
@@ -43,10 +49,13 @@ export class ScheduleContentComponent implements OnInit {
     this._store.select(getPrereqList).subscribe(prereqList => {
       this.prereqList = prereqList
     })
+    this._store.select(getSelectedProgram).subscribe(selectedProgram => {
+      this.selectedProgram = selectedProgram
+    })
   }
 
   saveSemesterDataIntoDB(){
-    this._firestoreService.insertScheduleData(this.semesterData).finally(
+    this._firestoreService.insertScheduleData(this.semesterData, this.selectedProgram).finally(
       () => {
         alert("Schedules Saved Successfully!")
       }

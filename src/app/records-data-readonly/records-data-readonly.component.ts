@@ -15,7 +15,7 @@ export class RecordsDataReadonlyComponent implements OnInit {
   avgGPA: number = 0
 
   constructor(
-    private _store: Store<{scheduleData: {scheduleData: []}}>,
+    private _store: Store<{scheduleData: {scheduleData: []}}>
   ) { }
 
   ngOnInit(): void {

@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FirestoreNOSQLService } from "../services/firestore-nosql.service";
 import {Course} from "../models/course";
 import {Store} from "@ngrx/store";
-import {getCoursesForMajor} from "../state/scheduler.actions";
+import {
+  clearSelectedCourseList,
+  getCoursesForMajor,
+  updateSelectedCoursesList, updateSelectedProgram,
+  updateTotalTakenCreditsCount
+} from "../state/scheduler.actions";
 import {Observable} from "rxjs";
 
 @Component({
@@ -28,7 +33,9 @@ export class MajorFilterComponent implements OnInit {
   }
 
   getCoursesForMajor(){
-    this._firestoreService.getCourses().finally()
+    this._firestoreService.getCourses(this.majorSelection).finally()
+    this._store.dispatch(clearSelectedCourseList());
+    this._store.dispatch(updateSelectedProgram({selectedProgram: this.majorSelection}));
     let x = document.getElementById("courseSelection");
     x.style.display = "block";
     x = document.getElementById("electivesColumn");
@@ -37,6 +44,12 @@ export class MajorFilterComponent implements OnInit {
     x.style.display = "block";
     x = document.getElementById("relatedColumn");
     x.style.display = "block";
+    this.hideStudyPlanSection()
+  }
+
+  hideStudyPlanSection(){
+    let x = document.getElementById("studyPlan");
+    x.style.display = "none";
   }
 
 }

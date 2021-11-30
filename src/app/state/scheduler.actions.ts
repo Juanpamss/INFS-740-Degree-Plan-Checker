@@ -30,3 +30,9 @@ export const getScheduleData = createAction('getScheduleDataList',
 export const updateTotalTakenCreditsCount = createAction('getTotalTakenCreditsList',
   props<{ totalTakenCredits: number }>()
 );
+
+export const clearSelectedCourseList = createAction('clearSelectedCourseList');
+
+export const updateSelectedProgram = createAction('getSelectedProgram',
+  props<{ selectedProgram: string }>()
+);

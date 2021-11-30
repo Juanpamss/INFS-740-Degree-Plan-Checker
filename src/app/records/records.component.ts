@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {getSchedulesList, getSemesterDataList} from "../state/scheduler.selector";
 import {Store} from "@ngrx/store";
 import {FirestoreNOSQLService} from "../services/firestore-nosql.service";
+import {Schedule} from "../models/schedule";
 
 @Component({
   selector: 'app-records',
@@ -23,5 +24,9 @@ export class RecordsComponent implements OnInit {
     this._store.select(getSchedulesList).subscribe(schedules => {
       this.schedules = schedules
     })
+  }
+
+  convertDate(date){
+    return new Date(date).toLocaleDateString("en-us")
   }
 }

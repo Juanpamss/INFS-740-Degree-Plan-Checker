@@ -9,7 +9,8 @@ export interface initialState{
   selectedCourses : Course[],
   semesterData : SemesterData[],
   schedules: Schedule[],
-  scheduleData: []
+  scheduleData: [],
+  selectedProgram: string
 }
 
 export const initialState = {
@@ -19,5 +20,6 @@ export const initialState = {
   selectedCourses : [],
   semesterData : [],
   schedules: [],
-  scheduleData: []
+  scheduleData: [],
+  selectedProgram: ""
 }

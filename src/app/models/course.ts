@@ -7,9 +7,10 @@ export class Course {
   type: string;
   difficulty: number;
   avgGrade: string;
-  avgGPA: number
+  avgGPA: number;
+  program: string
 
-  constructor(dcode, cno, name, description, credits, type, difficulty, avgGrade, avgGPA) {
+  constructor(dcode, cno, name, description, credits, type, difficulty, avgGrade, avgGPA, program) {
     this.dcode = dcode;
     this.cno = cno;
     this.name = name;
@@ -18,6 +19,7 @@ export class Course {
     this.type = type;
     this.difficulty = difficulty;
     this.avgGrade = avgGrade;
-    this.avgGPA = avgGPA
+    this.avgGPA = avgGPA;
+    this.program = program
   }
 }

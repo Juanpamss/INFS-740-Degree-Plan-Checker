@@ -46,7 +46,8 @@ import { RecordsDataReadonlyComponent } from './records-data-readonly/records-da
       semesterData: schedulerReducer,
       schedules: schedulerReducer,
       scheduleData: schedulerReducer,
-      totalTakenCredits: schedulerReducer
+      totalTakenCredits: schedulerReducer,
+      selectedProgram: schedulerReducer
     }),
     NgbModule
   ],
