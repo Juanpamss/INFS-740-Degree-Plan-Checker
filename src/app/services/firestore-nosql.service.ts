@@ -41,15 +41,16 @@ export class FirestoreNOSQLService {
     this._store.dispatch(getCoursesForMajor({courseList: coursesList}));
   }
 
+  // Get a list of prerequisites from database
   async getPrerequisites() {
     const prereqCol = collection(this.db, 'prerequisites');
-    //const q = query(prereqCol, where("cno", "in", cnos));
     const q = query(prereqCol);
     const prereqSnapshot = await getDocs(q);
     const prereqList = await prereqSnapshot.docs.map(doc => doc.data());
     this._store.dispatch(getPrereqForCourses({prereqList: prereqList}));
   }
 
+  // Insert generated schedule into database
   async insertScheduleData(data: SemesterData[], program) {
     const scheduleColRef = collection(this.db, 'schedules');
     const scheduleDataColRef = collection(this.db, 'scheduleData');
@@ -62,8 +63,6 @@ export class FirestoreNOSQLService {
     }
 
     //To convert timestamp to date
-    //let date = new Date(scheduleToInsert.createdOn).toLocaleDateString("en-us")
-
     addDoc(scheduleColRef, scheduleToInsert).then(function(docRef) {
       data.forEach( (item, index) => {
         let dataToInsert = {

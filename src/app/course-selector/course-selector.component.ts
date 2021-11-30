@@ -74,10 +74,6 @@ export class CourseSelectorComponent implements OnInit {
       }
     })
 
-    /*console.log("core: ", coreCourses)
-    console.log("related: ", relatedCourses)
-    console.log("electives: ", electiveCourses)*/
-
     this.totalTakenCredits = this.selectedCourses.reduce( (total, item) => {
       return total + item.credits;
     }, 0);
