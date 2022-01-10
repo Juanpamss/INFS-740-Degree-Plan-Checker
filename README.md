@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.1.
 
+This application was created as a project for INFS-740 and it provides a guide and plan for classes that could be taken at GMU and expected GPA at the end of it.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
